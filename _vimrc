@@ -30,16 +30,18 @@ Plugin 'surround.vim'
 Plugin 'Syntastic'
 Plugin 'Tabular'
 Plugin 'minibufexpl.vim'
-"Plugin 'paredit.vim'
+Plugin 'paredit.vim'
 Plugin 'xml.vim'
 Plugin 'vim-signify'
-Plugin 'bling/vim-airline'
 Plugin 'solarized'
 Plugin 'supertab'
-Plugin 'YouCompleteMe'
-Plugin 'AsyncCommand'
+" Plugin 'YouCompleteMe'
 Plugin 'Tagbar'
+Plugin 'matze/vim-move'
+Plugin 'w0rp/ale'
 Plugin 'ivanov/vim-ipython'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -59,9 +61,16 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 "
 
+let g:airline#extensions#hunks#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+
 let g:airline_powerline_fonts = 1
-let g:solarized_italic    =   0
+let g:airline_theme='solarized'
+let g:airline_solarized_bg='dark'
+
 set background=dark
+let g:solarized_italic    =   0
 colorscheme solarized
 
 set langmenu=zh_CN.UTF-8
@@ -72,6 +81,7 @@ set cursorline
 set completeopt=preview,menuone
 set encoding=utf-8
 set fencs=ucs-bom,utf-8,default,chinese,big5
+set ambiwidth=double
 "set dir=d:\jtemp\vimbackup
 "set backupdir=D:\JTemp\vimundo
 set nobomb
@@ -164,9 +174,8 @@ au! WinEnter * set cursorline nocursorcolumn
 
 let g:filesystemencoding="cp936" " when use chinese file name it causes error in cmd
 " Color in active status line
-autocmd BufEnter * hi statusline guibg=#859900 guifg=Black gui=NONE
-autocmd BufEnter * hi wildmenu guibg=DarkGreen gui=NONE
-
+" autocmd BufEnter * hi statusline guibg=#859900 guifg=Black gui=NONE
+" autocmd BufEnter * hi wildmenu guibg=DarkGreen gui=NONE
 
 " Backward erasing a character in normal mode, do not check if current form balanced
 function! s:PEraseBck( count ) "{{{ new map for easy deletion in insert mode
@@ -281,49 +290,54 @@ nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
 nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>  
 "nmap <F4> :YcmDiags<CR>  
 
-
-" set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h11
-"   if !exists('g:airline_symbols')
-"     let g:airline_symbols = {}
-"   endif
-
-  " unicode symbols
-"   let g:airline_left_sep = '»'
-"   let g:airline_left_sep = '▶'
-"   let g:airline_right_sep = '«'
-"   let g:airline_right_sep = '◀'
-"   let g:airline_symbols.crypt = '🔒'
-"   let g:airline_symbols.linenr = '␊'
-"   let g:airline_symbols.linenr = '␤'
-"   let g:airline_symbols.linenr = '¶'
-"   let g:airline_symbols.branch = '⎇'
-"   let g:airline_symbols.paste = 'ρ'
-"   let g:airline_symbols.paste = 'Þ'
-"   let g:airline_symbols.paste = '∥'
-"   let g:airline_symbols.whitespace = 'Ξ'
-
-  " powerline symbols
-"    let g:airline_left_sep = ''
-"    let g:airline_left_alt_sep = ''
-"    let g:airline_right_sep = ''
-"    let g:airline_right_alt_sep = ''
-"    let g:airline_symbols.branch = ''
-"    let g:airline_symbols.readonly = ''
-"    let g:airline_symbols.linenr = ''
- 
-"    " old vim-powerline symbols
-"    let g:airline_left_sep = '⮀'
-"    let g:airline_left_alt_sep = '⮁'
-"    let g:airline_right_sep = '⮂'
-"    let g:airline_right_alt_sep = '⮃'
-"    let g:airline_symbols.branch = '⭠'
-"    let g:airline_symbols.readonly = '⭤'
-"    let g:airline_symbols.linenr = '⭡'
-
 " md-server
 " autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn} :Silent md-server "%:p"
-autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn} :AsyncCommand md-server "%:p"
-autocmd BufUnload *.{md,mdown,mkd,mkdn,markdown,mdwn} :AsyncCommand curl "http://localhost:9300/shutdown"
+" autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn} :AsyncCommand md-server "%:p"
+" autocmd BufUnload *.{md,mdown,mkd,mkdn,markdown,mdwn} :AsyncCommand curl "http://localhost:9300/shutdown"
+
+set guifont=Consolas\ for\ Powerline\ FixedD:h11
+if !exists('g:airline_symbols')
+let g:airline_symbols = {}
+endif
+
+  " unicode symbols
+  let g:airline_left_sep = '»'
+  let g:airline_left_sep = '▶'
+  let g:airline_right_sep = '«'
+  let g:airline_right_sep = '◀'
+  let g:airline_symbols.crypt = '🔒'
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.linenr = '␊'
+  let g:airline_symbols.linenr = '␤'
+  let g:airline_symbols.linenr = '¶'
+  let g:airline_symbols.maxlinenr = ''
+  let g:airline_symbols.maxlinenr = '㏑'
+  let g:airline_symbols.branch = '⎇'
+  let g:airline_symbols.paste = 'ρ'
+  let g:airline_symbols.paste = 'Þ'
+  let g:airline_symbols.paste = '∥'
+  let g:airline_symbols.spell = 'Ꞩ'
+  let g:airline_symbols.notexists = 'Ɇ'
+  let g:airline_symbols.whitespace = 'Ξ'
+
+  " powerline symbols
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = '☰'
+  let g:airline_symbols.maxlinenr = ''
+
+  " old vim-powerline symbols
+  let g:airline_left_sep = '⮀'
+  let g:airline_left_alt_sep = '⮁'
+  let g:airline_right_sep = '⮂'
+  let g:airline_right_alt_sep = '⮃'
+  let g:airline_symbols.branch = '⭠'
+  let g:airline_symbols.readonly = '⭤'
+  let g:airline_symbols.linenr = '⭡'
 
 syn on 
 "  vim: set foldmethod=marker :
